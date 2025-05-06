@@ -222,3 +222,182 @@ CREATE TABLE IF NOT EXISTS "table" (
 );
 */
 ```
+
+## `doublePrecision`
+
+```dart
+final table = pgTable('table', {
+	'double1': doublePrecision(),
+	'double2': doublePrecision(precision: 10.10),
+});
+
+/* - SQL -
+CREATE TABLE IF NOT EXISTS "table" (
+	"double1" double precision,
+	"double2" double precision default 10.10,
+);
+*/
+```
+
+## `json`
+
+```dart
+final table = pgTable('table', {
+	'json1': json(),
+	'json2': json().$default({ "foo": "bar" }),
+});
+
+/* - SQL -
+CREATE TABLE IF NOT EXISTS "table" (
+	"json1" json,
+	"json2" json default '{"foo": "bar"}'::json,
+);
+*/
+```
+
+## `jsonb`
+
+```dart
+final table = pgTable('table', {
+	'jsonb1': jsonb(),
+	'jsonb2': jsonb().$default({ "foo": "bar" }),
+});
+
+/* - SQL -
+CREATE TABLE IF NOT EXISTS "table" (
+	"jsonb1" jsonb,
+	"jsonb2" jsonb default '{"foo": "bar"}'::jsonb,
+	"jsonb3" jsonb default '{"foo": "bar"}'::jsonb
+);
+*/
+```
+
+## `time`
+
+```dart
+final table = pgTable('table', {
+  'time1': time(),
+  'time2': time(withTimezone: true),
+  'time3': time(fsp: 6),
+  'time4': time(fsp: 6, withTimezone: true)
+});
+
+/* - SQL -
+CREATE TABLE IF NOT EXISTS "table" (
+	"time1" time,
+	"time2" time with timezone,
+	"time3" time(6),
+	"time4" time(6) with timezone
+);
+*/
+```
+
+## `timestamp`
+
+```dart
+final table = pgTable('table', {
+	'timestamp1': timestamp(),
+	'timestamp2': timestamp(precision: 6, withTimezone: true),
+	'timestamp3': timestamp().defaultNow(),
+	'timestamp4': timestamp().$default(sql(now())),
+});
+
+/* - SQL -
+CREATE TABLE IF NOT EXISTS "table" (
+	"timestamp1" timestamp,
+	"timestamp2" timestamp (6) with time zone,
+	"timestamp3" timestamp default now(),
+	"timestamp4" timestamp default now()
+);
+*/
+```
+
+```dart
+'timestamp': timestamp(mode: "date") // DATE
+'timestamp': timestamp(mode: "string") // TEXT
+'timestamp': timestamp(mode: "number") // NUMBER
+'timestamp': timestamp(mode: "timestamp") //  TIMESTAMP
+```
+
+## `date`
+
+```dart
+
+final table = pgTable('table', {
+	'date': date(),
+});
+
+/* - SQL -
+CREATE TABLE IF NOT EXISTS "table" (
+	"date" date
+);
+*/
+```
+
+## `interval`
+
+```dart
+final table = pgTable('table', {
+	'interval1': interval(),
+	'interval2': interval(fields: 'day'),
+	'interval3': interval(fields: 'month' , precision: 6),
+});
+
+/* - SQL -
+CREATE TABLE IF NOT EXISTS "table" (
+	"interval1" interval,
+	"interval2" interval day,
+	"interval3" interval(6) month
+);
+*/
+```
+
+## `point`
+
+```dart
+final items = pgTable('items', {
+ 'point': point(),
+ 'pointObj': point(mode: 'xy'), // mode: xy | tuple
+});
+
+/* - SQL -
+CREATE TABLE IF NOT EXISTS "items" (
+	"point" point,
+	"pointObj" point
+);
+*/
+```
+
+## `point`
+
+```dart
+final items = pgTable('items', {
+ 'line': line(),
+ 'lineObj': line(mode: 'abc'), // mode: abc | tuple
+});
+
+/* - SQL -
+CREATE TABLE IF NOT EXISTS "items" (
+	"line" line,
+	"lineObj" line
+);
+*/
+```
+
+## `enum`
+
+```dart
+final moodEnum = pgEnum('mood', ['sad', 'ok', 'happy']);
+
+final table = pgTable('table', {
+  'mood': moodEnum(),
+});
+
+/* - SQL -
+CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
+
+CREATE TABLE IF NOT EXISTS "table" (
+	"mood" mood
+);
+*/
+```
